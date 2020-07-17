@@ -1,0 +1,12 @@
+id: Será el identificador principal de la tabla. Sirve para diferenciar cada uno de los mensajes.
+autor: El autor del mensaje.
+titulo:El titulo que tendrá el mensaje. Si este mensaje es el iniciador de un tema, será el que mostrará en el home del Foro.
+mensaje: El mensaje en si mismo.
+fecha: Un campo DATETIME que indicará en que fecha se ha publicado este mensaje.
+respuestas: Si este mensaje es el iniciador de un tema, aquí se acumularán la cantidad de respuestas que reciba.
+identificador: Este campo guarda el valor del id del mensaje que se está respondiendo. Si el mensaje es iniciador de un tema, entonces este campo valdrá cero.
+ult_respuesta: Si el mensaje es iniciador de tema, aqui se actualizará valor de acuerdo con la fecha de la última respuesta que haya recibido. Sirve para podermantener un orden en los foros.
+
+
+
+sudo systemctl start mongod
