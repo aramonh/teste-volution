@@ -1,12 +1,18 @@
 import express from "express";
 const app = express();
-
-
+const session = require('express-session');
 
 
 //Middlewares
 app.use(express.json());
 const middleware = require ('./../middlewares/auth.middleware');
+    
+app.use(session({
+    secret: '2C44-4D44-WppQ38S',
+    resave: true,
+    saveUninitialized: true
+}));
+  
 
 
 //Import Routes

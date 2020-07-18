@@ -16,7 +16,8 @@ module.exports = {
 				if (err) {
 					return res.json({ mensaje: "Token inválida" });
 				} else {
-					req.decoded = decoded;
+					console.log("user logueado",decoded.payload._id);
+					req.session.uid=decoded.payload._id;
 					next();
 				}
 			});

@@ -1,7 +1,7 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Task } from './../shared/models/task.interface';
 import { async } from '@angular/core/testing';
-import { ApiServiceExample } from './../services/api/api.example.service';
+import { ApiServiceExample } from '../services/api/api.task.service';
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { AuthService } from '../auth/services/auth.service';
 import { Observable } from 'rxjs';
@@ -31,23 +31,60 @@ hoy  = new Date();
     priority: new FormControl('',Validators.required),
     expiration_date: new FormControl('',Validators.required),
   });
+  TaskFormUpdate = new FormGroup({
+    id:new FormControl('',Validators.required),
+    name: new FormControl('',Validators.required),
+    priority: new FormControl('',Validators.required),
+    expiration_date: new FormControl('',Validators.required),
+  });
+
 
 public task:Task;
 
-  constructor(private apiRest: ApiServiceExample,private authSvc: AuthService) {}
+  constructor(private apiRest: ApiServiceExample,private authSvc: AuthService, private router: Router) {}
   
   ngOnInit() {
+    if(this.authSvc.logIn){
     this.getAll();
+    this.checkDate();
+  }else{
+    this.router.navigate(['/login']);
+  }
+  }
+ 
+  async checkDate(){
+    
+    if(this.task.expiration_date<=this.hoy){
+      alert("Some task are expired, check your tasks")
+    }
     
   }
-  ngOnChanges(changes: SimpleChanges) {
-    // changes.prop contains the old and the new value...
-    this.user$.email=localStorage.getItem('email');
-    this.user$.name=localStorage.getItem('name')
-  }
 
-  async onSendTask() {
+  async onUpdateData(id,name,priority,expiration_date){
+   this.TaskFormUpdate.setValue({
+     id:id,
+     name:name,
+     priority:priority,
+     expiration_date:expiration_date
+   })
+   
+  }
+  async onCleanData(){
+    this.TaskForm.setValue({
+      name:"",
+      priority:"",
+      expiration_date:""
+    })
+    this.TaskFormUpdate.setValue({
+      id:"",
+      name:"",
+      priority:"",
+      expiration_date:""
+    })
+  }
+  async onSendTask(fact) {
     try{
+      if("create"===fact){
       const { name, priority, expiration_date } = this.TaskForm.value;
       const dateinput= new Date(expiration_date);
       console.log("Hoy",this.hoy);
@@ -65,7 +102,26 @@ public task:Task;
         console.log("SENDED-OK")
         window.location.reload();
       }
-    
+    }else if("update"===fact){
+      const {id, name, priority, expiration_date } = this.TaskFormUpdate.value;
+      const dateinput= new Date(expiration_date);
+      console.log("Hoy",this.hoy);
+      console.log("Fechha Tarea",dateinput);
+      const task = {
+        name:name,
+        priority:priority,
+        expiration_date:dateinput
+      }
+      if(this.hoy>dateinput){
+        alert("Date are too old");
+      }else {
+        alert("Task Updated");
+        this.updateTask(id,task);
+        console.log("SENDED-OK")
+        window.location.reload();
+      }
+    }
+   
    
       
     }catch(err){
@@ -95,6 +151,9 @@ public task:Task;
       const result = await this.apiRest.getAll()
       .subscribe((data: Task) => {
         this.task=data;
+      },(err)=>{
+        alert("Your session are expired, please login again");
+        window.location.reload();
       });
       return result;
     } catch (error) {

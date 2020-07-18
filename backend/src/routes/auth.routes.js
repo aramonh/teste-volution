@@ -83,13 +83,14 @@ router.post("/register", async (req, res) => {
 	}
 });
 
-//REGISTER-CREATE USER
+//LOGOUT USER
 router.post("/logout", async (req, res) => {
 	try {
 
 		const token = req.body.token;
 
 		jwt.destroy(token)
+		req.session.destroy();
 		console.log("Destroy Token");
 	} catch (err) {
 		console.log(err);

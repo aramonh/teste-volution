@@ -1,11 +1,14 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      HELLO HOME
-      <p *ngIf="user$ ">{{user$.email}}</p>
-      <ul>
-        <li *ngFor="let task$ of task">id:{{ task$._id}}  name: {{ task$.name}}   priority: {{ task$.priority }}   expiration_date: {{task$.expiration_date}}</li>
-      </ul>
+       <p class="mx-auto my-auto text-center py-3" *ngIf="user$ ">Hello, <strong> {{user$.name}} </strong>   ,this is the home of your appweb,
+        where you can create and manage tasks, 
+        enjoy it</p> 
+
+         <!-- Button to Open the Modal -->
+ <button type="button" class="btn btn-success mx-auto text-center px-auto" data-toggle="modal" data-target="#addTaskModal">
+  ADD Task
+</button>
       <table class="table">
         <thead>
           <tr><th scope="col">#</th>
@@ -22,22 +25,148 @@
             <td>{{ task$.name}}</td>
             <td>{{ task$.priority }}</td>
             <td>{{task$.expiration_date}}</td>
-            <td><button class="btn-primary" >O</button></td>
-            <td><button class="btn-danger" (click)="deleteTask(task$._id)" >X</button></td>
+            <td><button class="btn btn-primary" data-toggle="modal" (click)="onUpdateData(task$._id,task$.name,task$.priority ,task$.expiration_date)" data-target="#updateTaskModal">O</button></td>
+            <td><button class="btn btn-danger" (click)="deleteTask(task$._id)" >X</button></td>
           </tr>
         </tbody>
       </table>
 
 
 
-
-
-
-
-
-
+<!-- The Modal -->
+<div class="modal fade" id="addTaskModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">  <h1>TASK</h1></h4>
+        <button type="button" class="close" (click)="onCleanData()" data-dismiss="modal">&times;</button>
+      </div>
       
-      <div class="row">
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form [formGroup]="TaskForm" (ngSubmit)="onSendTask('create')">
+          <div class="form-group">
+            <label>name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="prioritySelect">Priority Task</label>
+            <select formControlName="priority" class="form-control" id="prioritySelect">
+              <option>Baja</option>
+              <option>Media</option>
+              <option>Alta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>expiration date</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="expiration_date"
+              placeholder="expiration_date"
+            />
+          </div>
+          <div>
+            <button
+            [disabled]="TaskForm.invalid"
+              type="submit"
+              class="btn btn-primary btn-lg btn-block" 
+            >
+              SEND
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"  (click)="onCleanData()"  data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="updateTaskModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">  <h1>TASKupdate</h1></h4>
+        <button type="button" class="close" (click)="onCleanData()" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form [formGroup]="TaskFormUpdate" (ngSubmit)="onSendTask('update')">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="id" hidden
+            />
+          </div>
+          <div class="form-group">
+            <label>name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="prioritySelect">Priority Task</label>
+            <select formControlName="priority" class="form-control" id="prioritySelect">
+              <option>Baja</option>
+              <option>Media</option>
+              <option>Alta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>expiration date</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="expiration_date"
+              placeholder="expiration_date"
+            />
+          </div>
+          <div>
+            <button
+            [disabled]="TaskFormUpdate.invalid"
+              type="submit"
+              class="btn btn-primary btn-lg btn-block" 
+            >
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"  (click)="onCleanData()"  data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--<div class="row">
         <div class="col-md-6 mx-auto mt-5">
           <div class="card">
             <div class="card-body">
@@ -82,7 +211,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
+      
+      
     </div>
   </div>
 </div>
